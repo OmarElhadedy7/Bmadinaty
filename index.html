@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مدينتي - خدمات المدينة الذكية</title>
+  <meta name="description" content="مدينتي منصة رقمية تربط المواطنين بالجهات المسؤولة لتحسين الخدمات الحضرية بشكل أسرع وأكثر كفاءة وشفافية." />
+
+  <!-- Google Fonts: Cairo (Arabic) + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────── */
+    :root {
+      --navy:      #0D1B3E;
+      --navy-mid:  #122150;
+      --navy-dark: #091228;
+      --navy-card: #152660;
+      --gold:      #F5A623;
+      --gold-light:#FFD166;
+      --gold-dim:  #C8841A;
+      --white:     #FFFFFF;
+      --offwhite:  #EAF0FF;
+      --text-muted:#8BA0CC;
+      --radius:    14px;
+      --shadow:    0 8px 40px rgba(0,0,0,.45);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--navy-dark);
+      color: var(--white);
+      overflow-x: hidden;
+      direction: rtl;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ─── SCROLLBAR ──────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--navy-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+    /* ─── UTILITY ────────────────────────────────────────── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 100px 0; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 700; letter-spacing: 2px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 16px;
+    }
+    .section-label::before, .section-label::after {
+      content: ''; display: block; width: 32px; height: 2px; background: var(--gold);
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 900; line-height: 1.25;
+      color: var(--white);
+    }
+    .section-title span { color: var(--gold); }
+    .section-sub {
+      font-size: 17px; color: var(--text-muted); margin-top: 14px; max-width: 600px;
+      line-height: 1.8;
+    }
+
+    /* ─── NAV ────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(9,18,40,.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(245,166,35,.15);
+      transition: background .3s;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .nav-logo-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .nav-logo-text { font-size: 22px; font-weight: 900; color: var(--white); }
+    .nav-logo-text span { color: var(--gold); }
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a {
+      font-size: 15px; font-weight: 600; color: var(--offwhite);
+      transition: color .2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; right: 0;
+      width: 0; height: 2px; background: var(--gold); transition: width .3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: var(--gold); color: var(--navy-dark);
+      padding: 10px 24px; border-radius: 8px;
+      font-size: 14px; font-weight: 700;
+      transition: background .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .nav-burger { display: none; background: none; border: none; cursor: pointer; }
+    .nav-burger span { display: block; width: 24px; height: 2px; background: var(--white); margin: 5px 0; transition: .3s; }
+    .mobile-menu {
+      display: none;
+      flex-direction: column; gap: 0;
+      background: var(--navy-mid);
+      border-bottom: 1px solid rgba(245,166,35,.15);
+    }
+    .mobile-menu a {
+      padding: 15px 24px; font-size: 16px; font-weight: 600;
+      color: var(--offwhite); border-bottom: 1px solid rgba(255,255,255,.05);
+      transition: color .2s, background .2s;
+    }
+    .mobile-menu a:hover { color: var(--gold); background: rgba(245,166,35,.07); }
+    .mobile-menu.open { display: flex; }
+
+    /* ─── HERO ───────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      background:
+        radial-gradient(ellipse 80% 60% at 110% 40%, rgba(245,166,35,.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at -10% 70%, rgba(21,38,96,.6) 0%, transparent 60%),
+        var(--navy-dark);
+      padding-top: 100px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-dots {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .hero-dots::before {
+      content: '';
+      position: absolute; top: 60px; left: 60px;
+      width: 200px; height: 200px;
+      background-image: radial-gradient(circle, rgba(245,166,35,.35) 1.5px, transparent 1.5px);
+      background-size: 18px 18px;
+    }
+    .hero-dots::after {
+      content: '';
+      position: absolute; bottom: 80px; right: 40px;
+      width: 160px; height: 160px;
+      background-image: radial-gradient(circle, rgba(245,166,35,.2) 1.5px, transparent 1.5px);
+      background-size: 18px 18px;
+    }
+    .hero-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      align-items: center; padding: 80px 0;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(245,166,35,.12); border: 1px solid rgba(245,166,35,.3);
+      padding: 6px 16px; border-radius: 100px;
+      font-size: 13px; font-weight: 700; color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .hero-badge .dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: pulse 1.8s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+    .hero-title {
+      font-size: clamp(38px, 5.5vw, 68px);
+      font-weight: 900; line-height: 1.15;
+      color: var(--white);
+    }
+    .hero-title .gold { color: var(--gold); }
+    .hero-desc {
+      font-size: 18px; color: var(--text-muted); margin: 24px 0 36px;
+      line-height: 1.9; max-width: 520px;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--gold); color: var(--navy-dark);
+      padding: 14px 32px; border-radius: 10px;
+      font-size: 15px; font-weight: 800;
+      border: none; cursor: pointer;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(245,166,35,.35);
+      display: inline-block;
+      text-align: center;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,166,35,.5); }
+    .btn-outline {
+      background: transparent; color: var(--white);
+      padding: 14px 32px; border-radius: 10px;
+      font-size: 15px; font-weight: 700;
+      border: 1.5px solid rgba(255,255,255,.2);
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      display: inline-block;
+      text-align: center;
+    }
+    .btn-outline:hover { border-color: var(--gold); background: rgba(245,166,35,.07); color: var(--gold); }
+    
+    .hero-visual { display: flex; flex-direction: column; gap: 16px; }
+    .phone-mock {
+      background: var(--navy-mid);
+      border: 2px solid rgba(245,166,35,.25);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+    .phone-mock::before {
+      content: '';
+      position: absolute; top: -30%; left: -20%;
+      width: 80%; height: 80%;
+      background: radial-gradient(ellipse, rgba(245,166,35,.08), transparent 70%);
+    }
+    .phone-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .phone-topbar-logo { font-size: 16px; font-weight: 900; color: var(--white); }
+    .phone-topbar-logo span { color: var(--gold); }
+    .phone-topbar-sub { font-size: 10px; color: var(--text-muted); }
+    .phone-actions { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; }
+    .phone-action {
+      background: rgba(255,255,255,.06); border-radius: 12px;
+      padding: 14px 8px; text-align: center;
+      border: 1px solid rgba(245,166,35,.1);
+    }
+    .phone-action-icon { font-size: 22px; margin-bottom: 4px; }
+    .phone-action-lbl { font-size: 10px; color: var(--text-muted); }
+    .phone-news-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .phone-news-title { font-size: 12px; font-weight: 700; color: var(--white); }
+    .phone-news-link { font-size: 11px; color: var(--gold); }
+    .phone-news-card {
+      background: rgba(255,255,255,.05); border-radius: 10px; padding: 10px;
+      display: flex; gap: 10px; align-items: center; margin-bottom: 8px;
+    }
+    .phone-news-img { width: 48px; height: 48px; border-radius: 8px; background: rgba(245,166,35,.2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .phone-news-text { font-size: 11px; color: var(--offwhite); line-height: 1.5; }
+    .phone-news-date { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+    .phone-map { background: rgba(245,166,35,.06); border-radius: 10px; height: 72px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(245,166,35,.1); margin-top: 8px; }
+
+    /* ─── ABOUT ──────────────────────────────────────────── */
+    .about { background: var(--navy); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .about-card {
+      background: var(--navy-card);
+      border: 1px solid rgba(245,166,35,.2);
+      border-radius: var(--radius); padding: 32px;
+      box-shadow: var(--shadow);
+    }
+    .about-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .about-card-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+    }
+    .about-card-title { font-size: 16px; font-weight: 800; color: var(--white); }
+    .about-card-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .about-checklist { list-style: none; }
+    .about-checklist li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--offwhite); padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .about-checklist li:last-child { border: none; }
+    .check-icon { color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+    .about-pillars { display: flex; flex-direction: column; gap: 20px; }
+    .about-text { font-size: 17px; color: var(--offwhite); line-height: 1.9; margin-bottom: 32px; }
+    .pillar {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: rgba(245,166,35,.05); border-radius: 12px; padding: 18px;
+      border: 1px solid rgba(245,166,35,.12);
+    }
+    .pillar-icon { font-size: 26px; flex-shrink: 0; }
+    .pillar-title { font-size: 15px; font-weight: 800; color: var(--white); }
+    .pillar-desc { font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
+
+    /* ─── FEATURES ───────────────────────────────────────── */
+    .features { background: var(--navy-dark); }
+    .features-head { text-align: center; margin-bottom: 60px; }
+    .features-head .section-label { justify-content: center; }
+    .features-head .section-sub { margin: 14px auto 0; }
+    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+    .feature-card {
+      background: var(--navy-card);
+      border: 1px solid rgba(245,166,35,.15);
+      border-radius: var(--radius); padding: 28px;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+    .feature-card:hover { transform: translateY(-6px); border-color: rgba(245,166,35,.5); box-shadow: 0 12px 40px rgba(245,166,35,.12); }
+    .feature-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: linear-gradient(135deg, rgba(245,166,35,.2), rgba(245,166,35,.05));
+      border: 1px solid rgba(245,166,35,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin-bottom: 18px;
+    }
+    .feature-title { font-size: 17px; font-weight: 800; color: var(--white); margin-bottom: 10px; }
+    .feature-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .feature-list { list-style: none; margin-top: 12px; }
+    .feature-list li {
+      font-size: 13px; color: var(--offwhite); padding: 4px 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .feature-list li::before { content: ''; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+
+    /* ─── SCREENSHOTS ────────────────────────────────────── */
+    .screenshots { background: var(--navy); overflow: hidden; }
+    .screenshots-head { text-align: center; margin-bottom: 56px; }
+    .screenshots-head .section-label { justify-content: center; }
+    .screens-track-wrap { overflow: hidden; }
+    .screens-track {
+      display: flex; gap: 24px;
+      animation: scrollTrack 28s linear infinite;
+      width: max-content;
+    }
+    .screens-track:hover { animation-play-state: paused; }
+    @keyframes scrollTrack {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .screen-card {
+      background: var(--navy-card);
+      border: 1px solid rgba(245,166,35,.2);
+      border-radius: 18px; padding: 20px;
+      width: 260px; flex-shrink: 0;
+      box-shadow: var(--shadow);
+    }
+    .screen-top {
+      background: var(--navy-mid); border-radius: 12px; padding: 14px;
+      margin-bottom: 14px; min-height: 160px;
+      display: flex; flex-direction: column; gap: 8px;
+      position: relative; overflow: hidden;
+    }
+    .screen-top::before {
+      content: '';
+      position: absolute; top: -20px; right: -20px;
+      width: 80px; height: 80px;
+      background: radial-gradient(circle, rgba(245,166,35,.12), transparent);
+    }
+    .screen-bar { background: rgba(245,166,35,.2); border-radius: 4px; height: 10px; }
+    .screen-bar.w60 { width: 60%; }
+    .screen-bar.w80 { width: 80%; }
+    .screen-bar.w40 { width: 40%; }
+    .screen-bar.w90 { width: 90%; }
+    .screen-bar.gold { background: rgba(245,166,35,.5); height: 6px; }
+    .screen-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+    .screen-mini-card { background: rgba(255,255,255,.06); border-radius: 8px; padding: 8px; height: 38px; }
+    .screen-map-placeholder { background: rgba(245,166,35,.08); border-radius: 8px; height: 70px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(245,166,35,.1); }
+    .screen-label { font-size: 13px; font-weight: 700; color: var(--white); }
+    .screen-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ─── TECH ───────────────────────────────────────────── */
+    .tech { background: var(--navy-dark); }
+    .tech-head { text-align: center; margin-bottom: 60px; }
+    .tech-head .section-label { justify-content: center; }
+    .tech-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
+    .tech-card {
+      background: var(--navy-card);
+      border: 1px solid rgba(245,166,35,.15);
+      border-radius: var(--radius); padding: 28px;
+      display: flex; gap: 18px; align-items: flex-start;
+    }
+    .tech-icon { font-size: 32px; flex-shrink: 0; }
+    .tech-title { font-size: 16px; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+    .tech-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tech-chip {
+      background: rgba(245,166,35,.1); border: 1px solid rgba(245,166,35,.25);
+      color: var(--gold); font-size: 12px; font-weight: 700;
+      padding: 4px 12px; border-radius: 100px;
+    }
+
+    /* ─── TEAM ───────────────────────────────────────────── */
+    .team { background: var(--navy); }
+    .team-head { text-align: center; margin-bottom: 56px; }
+    .team-head .section-label { justify-content: center; }
+    .team-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
+    .team-card {
+      background: var(--navy-card);
+      border: 1px solid rgba(245,166,35,.15);
+      border-radius: var(--radius); padding: 28px 20px;
+      text-align: center;
+      transition: transform .25s, border-color .25s;
+    }
+    .team-card:hover { transform: translateY(-4px); border-color: rgba(245,166,35,.4); }
+    .team-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-dim), var(--navy-mid));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; margin: 0 auto 16px;
+      border: 3px solid rgba(245,166,35,.3);
+    }
+    .team-name { font-size: 16px; font-weight: 800; color: var(--white); }
+    .team-role {
+      font-size: 12px; color: var(--gold); font-weight: 700;
+      margin-top: 4px; letter-spacing: .5px;
+    }
+    .team-desc { font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; }
+
+    /* ─── CONTACT FORM ───────────────────────────────────── */
+    .contact-section {
+      background: linear-gradient(135deg, var(--navy-mid), var(--navy-dark));
+      border-top: 1px solid rgba(245,166,35,.15);
+      border-bottom: 1px solid rgba(245,166,35,.15);
+    }
+    .contact-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
+      padding: 80px 0;
+    }
+    .contact-title { font-size: clamp(24px, 3.5vw, 40px); font-weight: 900; color: var(--white); }
+    .contact-title span { color: var(--gold); }
+    .contact-sub { font-size: 16px; color: var(--text-muted); margin-top: 10px; line-height: 1.7; }
+    
+    .contact-form {
+      background: var(--navy-card);
+      padding: 32px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(245,166,35,.2);
+      box-shadow: var(--shadow);
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 14px; font-weight: 700; color: var(--offwhite); margin-bottom: 8px; }
+    .form-input {
+      width: 100%;
+      background: rgba(9,18,40,.5);
+      border: 1px solid rgba(245,166,35,.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--white);
+      font-family: inherit;
+      transition: border-color .2s;
+    }
+    .form-input:focus { outline: none; border-color: var(--gold); }
+    .form-textarea { height: 120px; resize: none; }
+    .form-submit {
+      width: 100%;
+      background: var(--gold);
+      color: var(--navy-dark);
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .form-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      background: var(--navy-dark);
+      border-top: 1px solid rgba(245,166,35,.12);
+      padding: 48px 0 24px;
+    }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; margin-bottom: 40px; }
+    .footer-brand-name { font-size: 24px; font-weight: 900; color: var(--white); margin-bottom: 12px; }
+    .footer-brand-name span { color: var(--gold); }
+    .footer-brand-desc { font-size: 14px; color: var(--text-muted); line-height: 1.8; max-width: 320px; }
+    .footer-contact { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+    .footer-contact-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-muted); }
+    .footer-contact-item a { color: var(--gold); transition: opacity .2s; }
+    .footer-contact-item a:hover { opacity: .8; }
+    .footer-col-title { font-size: 14px; font-weight: 800; color: var(--white); margin-bottom: 16px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { font-size: 14px; color: var(--text-muted); transition: color .2s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.06); margin-bottom: 20px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-copy { font-size: 13px; color: var(--text-muted); }
+    .footer-copy span { color: var(--gold); }
+    .footer-made { font-size: 13px; color: var(--text-muted); }
+
+    /* ─── SCROLL REVEAL ──────────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ─── BACK TO TOP ────────────────────────────────────── */
+    #btt {
+      position: fixed; bottom: 28px; left: 28px;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--gold); color: var(--navy-dark);
+      border: none; cursor: pointer; font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(245,166,35,.45);
+      opacity: 0; pointer-events: none; transition: opacity .3s, transform .2s;
+    }
+    #btt.show { opacity: 1; pointer-events: all; }
+    #btt:hover { transform: translateY(-3px); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────── */
+    @media(max-width:900px){
+      .hero-inner, .about-grid, .contact-inner { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .tech-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: repeat(2,1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .nav-links, .nav-cta { display: none; }
+      .nav-burger { display: block; }
+    }
+    @media(max-width:600px){
+      .features-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .hero-btns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">🏙️</div>
+      <div>
+        <div class="nav-logo-text"><span>مدينتي</span></div>
+        <div style="font-size:10px;color:var(--text-muted);">خدمات المدينة الذكية</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#about">عن المشروع</a>
+      <a href="#features">المميزات</a>
+      <a href="#screenshots">لقطات التطبيق</a>
+      <a href="#tech">التقنيات</a>
+      <a href="#team">فريق العمل</a>
+      <a href="#contact">تواصل معنا</a>
+    </div>
+    <a href="#contact" class="nav-cta">تواصل معنا</a>
+    <button class="nav-burger" id="burger" aria-label="القائمة">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" onclick="closeMobile()">عن المشروع</a>
+    <a href="#features" onclick="closeMobile()">المميزات</a>
+    <a href="#screenshots" onclick="closeMobile()">لقطات التطبيق</a>
+    <a href="#tech" onclick="closeMobile()">التقنيات</a>
+    <a href="#team" onclick="closeMobile()">فريق العمل</a>
+    <a href="#contact" onclick="closeMobile()">تواصل معنا</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-dots"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <!-- Text -->
+      <div>
+        <div class="hero-badge">
+          <div class="dot"></div>
+          مشروع تخرج 2025 — دمياط الجديدة، مصر
+        </div>
+        <h1 class="hero-title">
+          ابدأ رحلتك<br />
+          في <span class="gold">مدينتك الذكية</span>
+        </h1>
+        <p class="hero-desc">
+          مدينتي هي منصة رقمية تربط المواطنين بالجهات المسؤولة لتحسين الخدمات الحضرية بشكل أسرع وأكثر كفاءة وشفافية.
+        </p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn-primary">🚀 تواصل معنا</a>
+          <a href="#features" class="btn-outline">اعرف أكثر ↓</a>
+        </div>
+      </div>
+
+      <!-- Visual: Phone Mockup -->
+      <div class="hero-visual">
+        <div class="phone-mock">
+          <div class="phone-topbar">
+            <div>
+              <div class="phone-topbar-logo"><span>مدينتي</span></div>
+              <div class="phone-topbar-sub">خدمات المدينة الذكية</div>
+            </div>
+            <div style="font-size:20px;">🔔</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:10px;">إجراءات سريعة</div>
+          <div class="phone-actions">
+            <div class="phone-action"><div class="phone-action-icon">📋</div><div class="phone-action-lbl">بلاغ جديد</div></div>
+            <div class="phone-action"><div class="phone-action-icon">🗺️</div><div class="phone-action-lbl">الخريطة</div></div>
+            <div class="phone-action"><div class="phone-action-icon">📡</div><div class="phone-action-lbl">تتبع البلاغ</div></div>
+          </div>
+          <div class="phone-news-header">
+            <div class="phone-news-title">آخر الأخبار</div>
+            <div class="phone-news-link">عرض الكل</div>
+          </div>
+          <div class="phone-news-card">
+            <div class="phone-news-img">路️</div>
+            <div>
+              <div class="phone-news-text">صيانة طرق في الحي المركزي</div>
+              <div class="phone-news-date">15 مايو 2025</div>
+            </div>
+          </div>
+          <div class="phone-map">
+            <span style="font-size:12px;color:var(--gold);">📍 خريطة البلاغات</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ════════════════════════════════════════════════ -->
+<section class="about section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="section-label">عن المشروع</div>
+        <h2 class="section-title">لماذا <span>مدينتي؟</span></h2>
+        <p class="about-text">
+          مدينتي منصة رقمية متكاملة تهدف إلى سد الفجوة بين المواطنين والجهات الحكومية المسؤولة عن الخدمات الحضرية. تتيح للمواطن الإبلاغ عن المشكلات فورًا، ومتابعة حالة بلاغه خطوة بخطوة حتى الحل.
+        </p>
+        <div class="about-pillars">
+          <div class="pillar">
+            <div class="pillar-icon">🏙️</div>
+            <div>
+              <div class="pillar-title">مدينة أقوى</div>
+              <div class="pillar-desc">نظام ذكي لإدارة موارد المدينة وتحديد أولويات الإصلاح</div>
+            </div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">🛡️</div>
+            <div>
+              <div class="pillar-title">شفافية في الإجراءات</div>
+              <div class="pillar-desc">كل بلاغ موثَّق ومتابَع علنيًا لضمان المساءلة</div>
+            </div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">⚡</div>
+            <div>
+              <div class="pillar-title">خدمات أفضل</div>
+              <div class="pillar-desc">استجابة أسرع وتواصل مباشر بين المواطن والمسؤول</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="about-card" style="margin-bottom:20px;">
+          <div class="about-card-header">
+            <div class="about-card-icon">📱</div>
+            <div>
+              <div class="about-card-title">تطبيق المواطنين</div>
+              <div class="about-card-sub">Flutter • متاح لـ Android & iOS</div>
+            </div>
+          </div>
+          <ul class="about-checklist">
+            <li><span class="check-icon">✓</span> إرسال البلاغات بالصور والفيديو</li>
+            <li><span class="check-icon">✓</span> تحديد الموقع باستخدام GPS</li>
+            <li><span class="check-icon">✓</span> تتبع حالة البلاغ لحظة بلحظة</li>
+            <li><span class="check-icon">✓</span> استقبال أخبار وإعلانات المدينة</li>
+            <li><span class="check-icon">✓</span> إشعارات فورية عند تحديث البلاغ</li>
+          </ul>
+        </div>
+        <div class="about-card">
+          <div class="about-card-header">
+            <div class="about-card-icon">🖥️</div>
+            <div>
+              <div class="about-card-title">لوحة تحكم المسؤولين</div>
+              <div class="about-card-sub">Vue 3 • Vite • Leaflet Maps</div>
+            </div>
+          </div>
+          <ul class="about-checklist">
+            <li><span class="check-icon">✓</span> مراجعة وإدارة البلاغات</li>
+            <li><span class="check-icon">✓</span> تحديد الأولويات والتكليف</li>
+            <li><span class="check-icon">✓</span> اعتماد أو رفض البلاغات</li>
+            <li><span class="check-icon">✓</span> نشر إعلانات المدينة</li>
+            <li><span class="check-icon">✓</span> تحليلات ومراقبة عبر الخرائط</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ════════════════════════════════════════════ -->
+<section class="features section" id="features">
+  <div class="container">
+    <div class="features-head reveal">
+      <div class="section-label">المميزات الرئيسية</div>
+      <h2 class="section-title">كل ما تحتاجه في <span>مكان واحد</span></h2>
+      <p class="section-sub">منظومة متكاملة تجعل التواصل بين المواطن والمدينة أسرع وأكثر فاعلية من أي وقت مضى</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">📝</div>
+        <div class="feature-title">إبلاغ ذكي</div>
+        <div class="feature-desc">أرسل بلاغك في ثوانٍ بصورة أو فيديو مع تحديد دقيق للموقع</div>
+        <ul class="feature-list">
+          <li>صور وفيديوهات</li>
+          <li>تحديد موقع GPS</li>
+          <li>تصنيفات ومستويات أولوية</li>
+        </ul>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📡</div>
+        <div class="feature-title">تتبع حالة البلاغ</div>
+        <div class="feature-desc">تابع بلاغك خطوة بخطوة من اللحظة الأولى حتى الحل النهائي</div>
+        <ul class="feature-list">
+          <li>تم الإرسال</li>
+          <li>قيد المراجعة</li>
+          <li>قيد التنفيذ / تم الحل / مرفوض</li>
+        </ul>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🗺️</div>
+        <div class="feature-title">خرائط تفاعلية</div>
+        <div class="feature-desc">شاهد مواقع البلاغات على خريطة حية وساعد في تخطيط الموارد</div>
+        <ul class="feature-list">
+          <li>عرض مواقع البلاغات</li>
+          <li>تخطيط أفضل للموارد</li>
+        </ul>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔔</div>
+        <div class="feature-title">إشعارات فورية</div>
+        <div class="feature-desc">استلم إشعارًا فورًا عند أي تحديث على بلاغاتك أو أخبار المدينة</div>
+        <ul class="feature-list">
+          <li>إشعارات تحديث البلاغ</li>
+          <li>أخبار وإعلانات المدينة</li>
+        </ul>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">دعم لغات متعددة</div>
+        <div class="feature-desc">واجهة كاملة باللغة العربية والإنجليزية لأوسع شريحة من المستخدمين</div>
+        <ul class="feature-list">
+          <li>العربية (RTL كامل)</li>
+          <li>الإنجليزية</li>
+        </ul>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🛡️</div>
+        <div class="feature-title">أمان وموثوقية</div>
+        <div class="feature-desc">نظام توثيق آمن يضمن حماية بيانات المواطنين والمسؤولين</div>
+        <ul class="feature-list">
+          <li>JWT Authentication</li>
+          <li>REST API آمن</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SCREENSHOTS ══════════════════════════════════════════ -->
+<section class="screenshots section" id="screenshots">
+  <div class="container">
+    <div class="screenshots-head reveal">
+      <div class="section-label">لقطات من التطبيق</div>
+      <h2 class="section-title">شاهد <span>مدينتي</span> في العمل</h2>
+    </div>
+  </div>
+  <div class="screens-track-wrap">
+    <div class="screens-track" id="screensTrack">
+      <!-- Card 1: Home -->
+      <div class="screen-card">
+        <div class="screen-top">
+          <div class="screen-bar w60"></div>
+          <div class="screen-bar w40 gold"></div>
+          <div class="screen-mini-grid">
+            <div class="screen-mini-card"></div>
+            <div class="screen-mini-card"></div>
+            <div class="screen-mini-card"></div>
+            <div class="screen-mini-card"></div>
+          </div>
+          <div style="text-align:center;font-size:28px;margin-top:6px;">🏠</div>
+        </div>
+        <div class="screen-label">الصفحة الرئيسية</div>
+        <div class="screen-sub">إجراءات سريعة وآخر الأخبار</div>
+      </div>
+      <!-- Card 2: New Report -->
+      <div class="screen-card">
+        <div class="screen-top">
+          <div class="screen-bar w80"></div>
+          <div style="background:rgba(245,166,35,.15);border-radius:8px;height:55px;display:flex;align-items:center;justify-content:center;margin:6px 0;font-size:24px;">📸</div>
+          <div class="screen-bar w90"></div>
+          <div class="screen-bar w60"></div>
+          <div style="background:var(--gold);border-radius:6px;height:24px;margin-top:6px;"></div>
+        </div>
+        <div class="screen-label">إنشاء بلاغ جديد</div>
+        <div class="screen-sub">صورة + موقع + تصنيف</div>
+      </div>
+      <!-- Card 3: Map -->
+      <div class="screen-card">
+        <div class="screen-top">
+          <div class="screen-map-placeholder" style="height:110px;">
+            <span style="font-size:14px;color:var(--gold);">📍 خريطة البلاغات</span>
+          </div>
+          <div class="screen-bar w60" style="margin-top:8px;"></div>
+        </div>
+        <div class="screen-label">خريطة تفاعلية</div>
+        <div class="screen-sub">مواقع البلاغات مباشرة</div>
+      </div>
+      <!-- Card 4: Track -->
+      <div class="screen-card">
+        <div class="screen-top">
+          <div class="screen-bar w80"></div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+            <div style="background:rgba(100,200,100,.2);border-radius:6px;padding:7px;display:flex;align-items:center;gap:6px;"><span style="color:#6DC47A;font-size:12px;">✓ تم الإرسال</span></div>
+            <div style="background:rgba(245,166,35,.2);border-radius:6px;padding:7px;display:flex;align-items:center;gap:6px;"><span style="color:var(--gold);font-size:12px;">⚙ قيد التنفيذ</span></div>
+            <div style="background:rgba(255,255,255,.05);border-radius:6px;padding:7px;"><span style="color:var(--text-muted);font-size:12px;">○ تم الحل</span></div>
+          </div>
+        </div>
+        <div class="screen-label">تتبع البلاغ</div>
+        <div class="screen-sub">حالة مفصلة لكل بلاغ</div>
+      </div>
+      <!-- Card 5: Notifications -->
+      <div class="screen-card">
+        <div class="screen-top">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:rgba(245,166,35,.1);border-radius:8px;padding:10px;display:flex;gap:8px;align-items:center;"><span style="font-size:20px;">🔔</span><div><div style="font-size:11px;color:var(--white);">تحديث بلاغك #045</div><div style="font-size:10px;color:var(--text-muted);">قيد التنفيذ الآن</div></div></div>
+            <div style="background:rgba(255,255,255,.05);border-radius:8px;padding:10px;display:flex;gap:8px;align-items:center;"><span style="font-size:20px;">📢</span><div><div style="font-size:11px;color:var(--white);">إعلان المدينة</div><div style="font-size:10px;color:var(--text-muted);">صيانة شبكة المياه</div></div></div>
+          </div>
+        </div>
+        <div class="screen-label">الإشعارات</div>
+        <div class="screen-sub">تحديثات فورية لكل بلاغ</div>
+      </div>
+      <!-- Duplicate for infinite scroll -->
+      <div class="screen-card">
+        <div class="screen-top">
+          <div class="screen-bar w60"></div>
+          <div class="screen-bar w40 gold"></div>
+          <div class="screen-mini-grid">
+            <div class="screen-mini-card"></div>
+            <div class="screen-mini-card"></div>
+            <div class="screen-mini-card"></div>
+            <div class="screen-mini-card"></div>
+          </div>
+          <div style="text-align:center;font-size:28px;margin-top:6px;">🏠</div>
+        </div>
+        <div class="screen-label">الصفحة الرئيسية</div>
+        <div class="screen-sub">إجراءات سريعة وآخر الأخبار</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TECH ══════════════════════════════════════════════════ -->
+<section class="tech section" id="tech">
+  <div class="container">
+    <div class="tech-head reveal">
+      <div class="section-label">التقنيات المستخدمة</div>
+      <h2 class="section-title">بُني بأحدث <span>التقنيات</span></h2>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-card reveal">
+        <div class="tech-icon">📱</div>
+        <div>
+          <div class="tech-title">تطبيق المواطنين</div>
+          <div class="tech-chips">
+            <span class="tech-chip">Flutter</span>
+            <span class="tech-chip">Provider</span>
+            <span class="tech-chip">Google Maps API</span>
+            <span class="tech-chip">Dart</span>
+          </div>
+        </div>
+      </div>
+      <div class="tech-card reveal">
+        <div class="tech-icon">⚙️</div>
+        <div>
+          <div class="tech-title">الخلفية البرمجية</div>
+          <div class="tech-chips">
+            <span class="tech-chip">REST API</span>
+            <span class="tech-chip">JWT Authentication</span>
+            <span class="tech-chip">Laravel</span>
+          </div>
+        </div>
+      </div>
+      <div class="tech-card reveal">
+        <div class="tech-icon">🔔</div>
+        <div>
+          <div class="tech-title">الإشعارات</div>
+          <div class="tech-chips">
+            <span class="tech-chip">OneSignal</span>
+            <span class="tech-chip">Push Notifications</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TEAM ══════════════════════════════════════════════════ -->
+<section class="team section" id="team">
+  <div class="container">
+    <div class="team-head reveal">
+      <div class="section-label">فريق العمل</div>
+      <h2 class="section-title">الفريق <span>الذي بنى مدينتي</span></h2>
+      <p class="section-sub" style="margin:14px auto 0;">فريق من طلاب الهندسة وعلوم الحاسب من دمياط الجديدة، مصر — مشروع تخرج 2025</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-avatar">👨‍💻</div>
+        <div class="team-name">مطور التطبيق</div>
+        <div class="team-role">Flutter Developer</div>
+        <div class="team-desc">بناء تطبيق المواطنين بالكامل مع تكامل الخرائط والإشعارات</div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar">🧑‍🔧</div>
+        <div class="team-name">مطور الخادم</div>
+        <div class="team-role">Backend Developer</div>
+        <div class="team-desc">بناء REST API الآمن ونظام المصادقة وقاعدة البيانات</div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar">🎨</div>
+        <div class="team-name">مصمم UX/UI</div>
+        <div class="team-role">UI/UX Designer</div>
+        <div class="team-desc">تصميم تجربة المستخدم وهوية المشروع البصرية الكاملة</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ════════════════════════════════════════════════════ -->
+<section class="contact-section section" id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="reveal">
+        <h2 class="contact-title">تواصل <span>معنا</span></h2>
+        <p class="contact-sub">
+          نحن هنا للإجابة على استفساراتكم. أرسل لنا رسالة وسنقوم بالرد عليك في أقرب وقت ممكن.
+        </p>
+        <div style="margin-top:32px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-size:24px;">📧</span>
+            <a href="mailto:madinaty@gmail.com" style="font-size:18px;color:var(--gold);font-weight:700;">madinaty@gmail.com</a>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:24px;">📍</span>
+            <span style="font-size:16px;color:var(--text-muted);">دمياط الجديدة، مصر</span>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <form action="mailto:madinaty@gmail.com" method="post" enctype="text/plain" class="contact-form">
+          <div class="form-group">
+            <label class="form-label">الاسم</label>
+            <input type="text" name="name" class="form-input" placeholder="أدخل اسمك" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" name="email" class="form-input" placeholder="email@example.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">الرسالة</label>
+            <textarea name="message" class="form-input form-textarea" placeholder="كيف يمكننا مساعدتك؟" required></textarea>
+          </div>
+          <button type="submit" class="form-submit">إرسال الرسالة</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name"><span>مدينتي</span></div>
+        <div class="footer-brand-desc">
+          منصة رقمية ذكية تربط المواطنين بالجهات المسؤولة لتحسين الخدمات الحضرية بشفافية وكفاءة.
+        </div>
+        <div class="footer-contact">
+          <div class="footer-contact-item">
+            <span>📧</span>
+            <a href="mailto:madinaty@gmail.com">madinaty@gmail.com</a>
+          </div>
+          <div class="footer-contact-item">
+            <span>📍</span>
+            <span>دمياط الجديدة، مصر</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">روابط سريعة</div>
+        <ul class="footer-links">
+          <li><a href="#about">عن المشروع</a></li>
+          <li><a href="#features">المميزات</a></li>
+          <li><a href="#screenshots">لقطات التطبيق</a></li>
+          <li><a href="#tech">التقنيات</a></li>
+          <li><a href="#team">فريق العمل</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">المشروع</div>
+        <ul class="footer-links">
+          <li><a href="#contact">تواصل معنا</a></li>
+          <li><a href="#home">الرئيسية</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 <span>مدينتي</span>. جميع الحقوق محفوظة.</div>
+      <div class="footer-made">صُنع بـ ❤️ في دمياط الجديدة، مصر</div>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to top -->
+<button id="btt" aria-label="العودة للأعلى" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  /* ─── Mobile menu ─── */
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  burger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  function closeMobile() { mobileMenu.classList.remove('open'); }
+
+  /* ─── Scroll reveal ─── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  /* ─── Navbar scroll ─── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.style.background = window.scrollY > 60
+      ? 'rgba(9,18,40,.97)'
+      : 'rgba(9,18,40,.88)';
+  });
+
+  /* ─── Back to top ─── */
+  const btt = document.getElementById('btt');
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('show', window.scrollY > 400);
+  });
+</script>
+</body>
+</html>
